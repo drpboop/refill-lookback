@@ -1,0 +1,108 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prescription Refill & LookBack Calculators</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f4f8;
+        }
+        .container {
+            max-width: 700px;
+            margin: auto;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        h1, h2 {
+            text-align: center;
+            color: #2c3e50;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid #dfe6e9;
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background-color: #dfe6e9;
+            color: #2d3436;
+        }
+        input[type="date"], input[type="number"] {
+            width: 90%;
+            padding: 8px;
+            border: 1px solid #b2bec3;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+        .result {
+            font-weight: bold;
+            margin-top: 10px;
+            text-align: center;
+            color: #0984e3;
+            font-size: 1.1em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Prescription Refill & LookBack Calculators</h1>
+
+        <h2>Prescription Refill Calculator</h2>
+        <table id="refillTable">
+            <tr><th>Claim Date</th><th>Day Supply</th></tr>
+            <tr><td><input type="date" onchange="autoCalculate()"></td><td><input type="number" onchange="autoCalculate()"></td></tr>
+            <tr><td><input type="date" onchange="autoCalculate()"></td><td><input type="number" onchange="autoCalculate()"></td></tr>
+            <tr><td><input type="date" onchange="autoCalculate()"></td><td><input type="number" onchange="autoCalculate()"></td></tr>
+            <tr><td><input type="date" onchange="autoCalculate()"></td><td><input type="number" onchange="autoCalculate()"></td></tr>
+            <tr><td><input type="date" onchange="autoCalculate()"></td><td><input type="number" onchange="autoCalculate()"></td></tr>
+            <tr><td><input type="date" onchange="autoCalculate()"></td><td><input type="number" onchange="autoCalculate()"></td></tr>
+            <tr><td><input type="date" onchange="autoCalculate()"></td><td><input type="number" onchange="autoCalculate()"></td></tr>
+            <tr><td><input type="date" onchange="autoCalculate()"></td><td><input type="number" onchange="autoCalculate()"></td></tr>
+            <tr><td><input type="date" onchange="autoCalculate()"></td><td><input type="number" onchange="autoCalculate()"></td></tr>
+            <tr><td><input type="date" onchange="autoCalculate()"></td><td><input type="number" onchange="autoCalculate()"></td></tr>
+        </table>
+        <div class="result" id="totalSupplyResult">Total Day Supply: 0</div>
+
+        <h2>LookBack Calculator</h2>
+        <div class="result" id="projectedDateResult">Projected End Date: N/A</div>
+    </div>
+
+    <script>
+        function autoCalculate() {
+            let table = document.getElementById("refillTable");
+            let total = 0;
+            let earliestDate = null;
+            for (let i = 1; i < table.rows.length; i++) {
+                let dateInput = table.rows[i].cells[0].children[0].value;
+                let supplyInput = table.rows[i].cells[1].children[0].value;
+                if (supplyInput) total += parseInt(supplyInput);
+                if (dateInput) {
+                    let date = new Date(dateInput);
+                    if (!earliestDate || date < earliestDate) {
+                        earliestDate = date;
+                    }
+                }
+            }
+            document.getElementById("totalSupplyResult").innerText = "Total Day Supply: " + total;
+            if (earliestDate && total > 0) {
+                earliestDate.setDate(earliestDate.getDate() + total);
+                let projected = earliestDate.toISOString().split('T')[0];
+                document.getElementById("projectedDateResult").innerText = "Projected End Date: " + projected;
+            } else {
+                document.getElementById("projectedDateResult").innerText = "Projected End Date: N/A";
+            }
+        }
+    </script>
+</body>
+</html>
