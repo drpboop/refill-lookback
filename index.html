@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prescription Lookback & Date Difference Calculator</title>
+    <title>prescription lookback & date difference calculator</title>
     <style>
         body {
             font-family: 'Century Gothic', sans-serif;
@@ -52,45 +52,40 @@
             color: #0984e3;
             font-size: 1.1em;
         }
-        /* Standalone section styling */
-        .section {
-            margin-top: 24px;
-            padding-top: 16px;
-            border-top: 1px solid #ecf0f1;
-        }
+        /* Inputs row for Day Difference */
         .grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 12px;
             align-items: end;
-            margin-bottom: 10px;
+            margin-top: 16px;
         }
         .grid label {
             display: block;
             color: #2c3e50;
             font-weight: 600;
             margin-bottom: 6px;
+            text-align: left;
         }
-        pre {
-            background: #f7f9fb;
-            padding: 10px;
-            border-radius: 8px;
-            border: 1px solid #ecf0f1;
-            overflow-x: auto;
+        .section {
+            margin-top: 24px;
+            padding-top: 16px;
+            border-top: 1px solid #ecf0f1;
         }
         .muted {
             color: #636e72;
             font-size: 0.95em;
             text-align: center;
+            margin-top: 4px;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Prescription Refill & Date Difference Calculator</h1>
+        <h1>prescription lookback & date difference calculator</h1>
 
-        <!-- Prescription Refill Calculator -->
-        <h2>Prescription Refill Calculator</h2>
+        <!-- Prescription Lookback -->
+        <h2>Prescription Lookback</h2>
         <table id="refillTable">
             <tr><th>Claim Date</th><th>Day Supply</th></tr>
             <tr><td><input type="date" onchange="autoCalculate()"></td><td><input type="number" onchange="autoCalculate()"></td></tr>
@@ -104,14 +99,14 @@
             <tr><td><input type="date" onchange="autoCalculate()"></td><td><input type="number" onchange="autoCalculate()"></td></tr>
             <tr><td><input type="date" onchange="autoCalculate()"></td><td><input type="number" onchange="autoCalculate()"></td></tr>
         </table>
-        <div class="result" id="totalSupplyResult">Total Day Supply: 0</div>
 
-        <!-- Projected End Date (formatted MM/DD/YYYY). "LookBack" heading removed -->
+        <!-- Results with consistent styling -->
+        <div class="result" id="totalSupplyResult">Total Day Supply: 0</div>
         <div class="result" id="projectedDateResult">Projected End Date: N/A</div>
 
-        <!-- Standalone Date Difference Calculator (auto-calculated; days only; absolute value) -->
+        <!-- Date Difference (same result styling as above) -->
         <div class="section" id="date-difference-section">
-            <h2>Date Difference Calculator</h2>
+            <h2>Date Difference</h2>
             <div class="grid">
                 <div>
                     <label for="dateDiffStart">Start Date</label>
@@ -122,10 +117,10 @@
                     <input type="date" id="dateDiffEnd" onchange="autoCalcDateDiff()">
                 </div>
             </div>
-            <div class="muted">Difference is calculated automatically and includes weekends.</div>
-            <pre id="dateDiffResult" aria-live="polite">Enter both dates to see the day difference.</pre>
+            <div class="muted">Calculated automatically.</div>
+            <div class="result" id="dateDiffResult">Day Difference: N/A</div>
         </div>
-        <!-- End Date Difference Calculator -->
+        <!-- End Date Difference -->
     </div>
 
     <script>
@@ -142,7 +137,7 @@
             return `${mm}/${dd}/${yyyy}`;
         }
 
-        // --- Prescription Refill auto-calc ---
+        // --- Prescription Lookback auto-calc ---
         function autoCalculate() {
             const table = document.getElementById("refillTable");
             let total = 0;
@@ -175,7 +170,7 @@
             }
         }
 
-        // --- Date Difference (auto; days only; includes weekends; ABSOLUTE value) ---
+        // --- Date Difference (auto; days only; ABSOLUTE value) ---
         function diffInCalendarDaysAbs(a, b) {
             const d1 = normalizeToLocalMidnight(a);
             const d2 = normalizeToLocalMidnight(b);
@@ -189,7 +184,7 @@
             const out = document.getElementById('dateDiffResult');
 
             if (!startVal || !endVal) {
-                out.textContent = 'Enter both dates to see the day difference.';
+                out.textContent = 'Day Difference: N/A';
                 return;
             }
 
@@ -197,13 +192,19 @@
             const b = new Date(endVal);
 
             if (Number.isNaN(a.getTime()) || Number.isNaN(b.getTime())) {
-                out.textContent = 'Invalid date input.';
+                out.textContent = 'Day Difference: N/A';
                 return;
             }
 
-            const days = diffInCalendarDaysAbs(a, b); // absolute value, includes weekends
+            const days = diffInCalendarDaysAbs(a, b); // absolute calendar days
             out.textContent = `Day Difference: ${days} day(s)`;
         }
+
+        // Optional: if fields are prefilled (e.g., browser autofill), compute on load.
+        document.addEventListener('DOMContentLoaded', () => {
+            autoCalculate();
+            autoCalcDateDiff();
+        });
     </script>
 </body>
 </html>
