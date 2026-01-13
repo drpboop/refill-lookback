@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prescription Refill & Date Difference Calculator</title>
+    <title>Prescription Lookback & Date Difference Calculator</title>
     <style>
         body {
             font-family: 'Century Gothic', sans-serif;
@@ -38,7 +38,7 @@
             background-color: #dfe6e9;
             color: #2d3436;
         }
-        input[type="date"], input[type="number"], select {
+        input[type="date"], input[type="number"] {
             width: 90%;
             padding: 8px;
             border: 1px solid #b2bec3;
@@ -71,27 +71,17 @@
             font-weight: 600;
             margin-bottom: 6px;
         }
-        .actions {
-            text-align: center;
-            margin-top: 8px;
-        }
-        button {
-            background: #0984e3;
-            color: white;
-            border: none;
-            padding: 10px 16px;
-            border-radius: 8px;
-            cursor: pointer;
-        }
-        button:hover {
-            background: #0c6fc0;
-        }
         pre {
             background: #f7f9fb;
             padding: 10px;
             border-radius: 8px;
             border: 1px solid #ecf0f1;
             overflow-x: auto;
+        }
+        .muted {
+            color: #636e72;
+            font-size: 0.95em;
+            text-align: center;
         }
     </style>
 </head>
@@ -119,29 +109,21 @@
         <!-- Projected End Date (formatted MM/DD/YYYY). "LookBack" heading removed -->
         <div class="result" id="projectedDateResult">Projected End Date: N/A</div>
 
-        <!-- Standalone Date Difference Calculator (Days only, absolute value) -->
+        <!-- Standalone Date Difference Calculator (auto-calculated; days only; absolute value) -->
         <div class="section" id="date-difference-section">
             <h2>Date Difference Calculator</h2>
             <div class="grid">
                 <div>
                     <label for="dateDiffStart">Start Date</label>
-                    <input type="date" id="dateDiffStart">
+                    <input type="date" id="dateDiffStart" onchange="autoCalcDateDiff()">
                 </div>
                 <div>
                     <label for="dateDiffEnd">End Date</label>
-                    <input type="date" id="dateDiffEnd">
-                </div>
-                <div>
-                    <label for="dateDiffMode">Mode</label>
-                    <select id="dateDiffMode">
-                        <option value="days">Days</option>
-                    </select>
-                </div>
-                <div class="actions">
-                    <button id="dateDiffBtn" type="button">Calculate Difference</button>
+                    <input type="date" id="dateDiffEnd" onchange="autoCalcDateDiff()">
                 </div>
             </div>
-            <pre id="dateDiffResult" aria-live="polite">Enter dates and click "Calculate Difference".</pre>
+            <div class="muted">Difference is calculated automatically and includes weekends.</div>
+            <pre id="dateDiffResult" aria-live="polite">Enter both dates to see the day difference.</pre>
         </div>
         <!-- End Date Difference Calculator -->
     </div>
@@ -193,7 +175,7 @@
             }
         }
 
-        // --- Date Difference (Days only; includes weekends; ABSOLUTE value) ---
+        // --- Date Difference (auto; days only; includes weekends; ABSOLUTE value) ---
         function diffInCalendarDaysAbs(a, b) {
             const d1 = normalizeToLocalMidnight(a);
             const d2 = normalizeToLocalMidnight(b);
@@ -201,13 +183,13 @@
             return Math.abs(Math.round(ms / (1000 * 60 * 60 * 24)));
         }
 
-        document.getElementById('dateDiffBtn').addEventListener('click', () => {
+        function autoCalcDateDiff() {
             const startVal = document.getElementById('dateDiffStart').value;
             const endVal = document.getElementById('dateDiffEnd').value;
             const out = document.getElementById('dateDiffResult');
 
             if (!startVal || !endVal) {
-                out.textContent = 'Please enter both Start Date and End Date.';
+                out.textContent = 'Enter both dates to see the day difference.';
                 return;
             }
 
@@ -221,7 +203,7 @@
 
             const days = diffInCalendarDaysAbs(a, b); // absolute value, includes weekends
             out.textContent = `Day Difference: ${days} day(s)`;
-        });
+        }
     </script>
 </body>
 </html>
