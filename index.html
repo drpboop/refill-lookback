@@ -85,9 +85,9 @@
         <h1>prescription lookback & date difference calculator</h1>
 
         <!-- Prescription Lookback -->
-        <h2>Prescription Lookback</h2>
+        <h2>prescription lookback</h2>
         <table id="refillTable">
-            <tr><th>Claim Date</th><th>Day Supply</th></tr>
+            <tr><th>claim date</th><th>day supply</th></tr>
             <tr><td><input type="date" onchange="autoCalculate()"></td><td><input type="number" onchange="autoCalculate()"></td></tr>
             <tr><td><input type="date" onchange="autoCalculate()"></td><td><input type="number" onchange="autoCalculate()"></td></tr>
             <tr><td><input type="date" onchange="autoCalculate()"></td><td><input type="number" onchange="autoCalculate()"></td></tr>
@@ -101,24 +101,24 @@
         </table>
 
         <!-- Results with consistent styling -->
-        <div class="result" id="totalSupplyResult">Total Day Supply: 0</div>
-        <div class="result" id="projectedDateResult">Projected End Date: N/A</div>
+        <div class="result" id="totalSupplyResult">total day supply: 0</div>
+        <div class="result" id="projectedDateResult">projected end date: N/A</div>
 
         <!-- Date Difference (same result styling as above) -->
         <div class="section" id="date-difference-section">
-            <h2>Date Difference</h2>
+            <h2>date difference</h2>
             <div class="grid">
                 <div>
-                    <label for="dateDiffStart">Start Date</label>
+                    <label for="dateDiffStart">start date</label>
                     <input type="date" id="dateDiffStart" onchange="autoCalcDateDiff()">
                 </div>
                 <div>
-                    <label for="dateDiffEnd">End Date</label>
+                    <label for="dateDiffEnd">end date</label>
                     <input type="date" id="dateDiffEnd" onchange="autoCalcDateDiff()">
                 </div>
             </div>
-            <div class="muted">Calculated automatically.</div>
-            <div class="result" id="dateDiffResult">Day Difference: N/A</div>
+            <div class="muted">calculated automatically.</div>
+            <div class="result" id="dateDiffResult">day difference: N/A</div>
         </div>
         <!-- End Date Difference -->
     </div>
@@ -157,16 +157,16 @@
                 }
             }
 
-            document.getElementById("totalSupplyResult").innerText = "Total Day Supply: " + total;
+            document.getElementById("totalSupplyResult").innerText = "total day supply: " + total;
 
             if (earliestDate && total > 0) {
                 // Normalize to local midnight and add total days.
                 const normalized = normalizeToLocalMidnight(earliestDate);
                 normalized.setDate(normalized.getDate() + total);
                 const projected = formatDateMMDDYYYY(normalized);
-                document.getElementById("projectedDateResult").innerText = "Projected End Date: " + projected;
+                document.getElementById("projectedDateResult").innerText = "projected end date: " + projected;
             } else {
-                document.getElementById("projectedDateResult").innerText = "Projected End Date: N/A";
+                document.getElementById("projectedDateResult").innerText = "projected end date: N/A";
             }
         }
 
@@ -184,7 +184,7 @@
             const out = document.getElementById('dateDiffResult');
 
             if (!startVal || !endVal) {
-                out.textContent = 'Day Difference: N/A';
+                out.textContent = 'day difference: N/A';
                 return;
             }
 
@@ -192,12 +192,12 @@
             const b = new Date(endVal);
 
             if (Number.isNaN(a.getTime()) || Number.isNaN(b.getTime())) {
-                out.textContent = 'Day Difference: N/A';
+                out.textContent = 'day difference: N/A';
                 return;
             }
 
             const days = diffInCalendarDaysAbs(a, b); // absolute calendar days
-            out.textContent = `Day Difference: ${days} day(s)`;
+            out.textContent = `day difference: ${days} day(s)`;
         }
 
         // Optional: if fields are prefilled (e.g., browser autofill), compute on load.
