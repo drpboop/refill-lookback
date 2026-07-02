@@ -1,210 +1,638 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>prescription lookback & date difference calculator</title>
-    <style>
-        body {
-            font-family: 'Century Gothic', sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f0f4f8;
-        }
-        .container {
-            max-width: 700px;
-            margin: auto;
-            background: #ffffff;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-        h1, h2 {
-            text-align: center;
-            color: #2c3e50;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-        }
-        th, td {
-            border: 1px solid #dfe6e9;
-            padding: 10px;
-            text-align: center;
-        }
-        th {
-            background-color: #dfe6e9;
-            color: #2d3436;
-        }
-        input[type="date"], input[type="number"] {
-            width: 90%;
-            padding: 8px;
-            border: 1px solid #b2bec3;
-            border-radius: 6px;
-            box-sizing: border-box;
-        }
-        .result {
-            font-weight: bold;
-            margin-top: 10px;
-            text-align: center;
-            color: #0984e3;
-            font-size: 1.1em;
-        }
-        /* Inputs row for Day Difference */
-        .grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            align-items: end;
-            margin-top: 16px;
-        }
-        .grid label {
-            display: block;
-            color: #2c3e50;
-            font-weight: 600;
-            margin-bottom: 6px;
-            text-align: left;
-        }
-        .section {
-            margin-top: 24px;
-            padding-top: 16px;
-            border-top: 1px solid #ecf0f1;
-        }
-        .muted {
-            color: #636e72;
-            font-size: 0.95em;
-            text-align: center;
-            margin-top: 4px;
-        }
-    </style>
+
+<meta charset="UTF-8">
+
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1.0"
+>
+
+<title>
+  prescription lookback & date difference calculator
+</title>
+
+<style>
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family:
+    "Century Gothic",
+    sans-serif;
+  margin: 0;
+  background: #f0f4f8;
+}
+
+.site-nav {
+  background: #111;
+  padding: 12px 20px;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.site-nav a {
+  color: white;
+  text-decoration: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+}
+
+.site-nav a:hover,
+.site-nav a.active {
+  background: #444;
+}
+
+.page-content {
+  padding: 20px;
+}
+
+.container {
+  max-width: 700px;
+  margin: auto;
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow:
+    0 4px 12px
+    rgba(0, 0, 0, 0.1);
+}
+
+h1,
+h2 {
+  text-align: center;
+  color: #2c3e50;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+th,
+td {
+  border: 1px solid #dfe6e9;
+  padding: 10px;
+  text-align: center;
+}
+
+th {
+  background: #dfe6e9;
+  color: #2d3436;
+}
+
+input[type="date"],
+input[type="number"] {
+  width: 90%;
+  padding: 8px;
+  border: 1px solid #b2bec3;
+  border-radius: 6px;
+}
+
+.result {
+  font-weight: bold;
+  margin-top: 10px;
+  text-align: center;
+  color: #0984e3;
+  font-size: 1.1em;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns:
+    1fr 1fr;
+  gap: 12px;
+  align-items: end;
+  margin-top: 16px;
+}
+
+.grid label {
+  display: block;
+  color: #2c3e50;
+  font-weight: 600;
+  margin-bottom: 6px;
+  text-align: left;
+}
+
+.section {
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top:
+    1px solid #ecf0f1;
+}
+
+.muted {
+  color: #636e72;
+  font-size: 0.95em;
+  text-align: center;
+  margin-top: 4px;
+}
+
+@media (max-width: 550px) {
+
+  .page-content {
+    padding: 12px;
+  }
+
+  .container {
+    padding: 18px;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  th,
+  td {
+    padding: 6px;
+  }
+
+  input[type="date"],
+  input[type="number"] {
+    width: 100%;
+  }
+
+  h1 {
+    font-size: 1.45rem;
+  }
+
+}
+
+</style>
 </head>
+
 <body>
-    <div class="container">
-        <h1>prescription lookback & date difference calculator</h1>
 
-        <!-- Prescription Lookback -->
-        <h2>prescription lookback</h2>
-        <table id="refillTable">
-            <tr><th>claim date</th><th>day supply</th></tr>
-            <tr><td><input type="date" onchange="autoCalculate()"></td><td><input type="number" onchange="autoCalculate()"></td></tr>
-            <tr><td><input type="date" onchange="autoCalculate()"></td><td><input type="number" onchange="autoCalculate()"></td></tr>
-            <tr><td><input type="date" onchange="autoCalculate()"></td><td><input type="number" onchange="autoCalculate()"></td></tr>
-            <tr><td><input type="date" onchange="autoCalculate()"></td><td><input type="number" onchange="autoCalculate()"></td></tr>
-            <tr><td><input type="date" onchange="autoCalculate()"></td><td><input type="number" onchange="autoCalculate()"></td></tr>
-            <tr><td><input type="date" onchange="autoCalculate()"></td><td><input type="number" onchange="autoCalculate()"></td></tr>
-            <tr><td><input type="date" onchange="autoCalculate()"></td><td><input type="number" onchange="autoCalculate()"></td></tr>
-            <tr><td><input type="date" onchange="autoCalculate()"></td><td><input type="number" onchange="autoCalculate()"></td></tr>
-            <tr><td><input type="date" onchange="autoCalculate()"></td><td><input type="number" onchange="autoCalculate()"></td></tr>
-            <tr><td><input type="date" onchange="autoCalculate()"></td><td><input type="number" onchange="autoCalculate()"></td></tr>
-        </table>
+<nav class="site-nav">
 
-        <!-- Results with consistent styling -->
-        <div class="result" id="totalSupplyResult">total day supply: 0</div>
-        <div class="result" id="projectedDateResult">projected end date: N/A</div>
+  <a href="https://drpboop.github.io/home/">
+    home
+  </a>
 
-        <!-- Date Difference (same result styling as above) -->
-        <div class="section" id="date-difference-section">
-            <h2>date difference</h2>
-            <div class="grid">
-                <div>
-                    <label for="dateDiffStart">start date</label>
-                    <input type="date" id="dateDiffStart" onchange="autoCalcDateDiff()">
-                </div>
-                <div>
-                    <label for="dateDiffEnd">end date</label>
-                    <input type="date" id="dateDiffEnd" onchange="autoCalcDateDiff()">
-                </div>
-            </div>
-            <div class="muted">calculated automatically.</div>
-            <div class="result" id="dateDiffResult">day difference: N/A</div>
-        </div>
-        <!-- End Date Difference -->
-    </div>
+  <a href="https://drpboop.github.io/crit/">
+    critter
+  </a>
 
-    <script>
-        // --- Utilities ---
-        function normalizeToLocalMidnight(d) {
-            // Prevent DST/timezone issues by normalizing to local midnight.
-            return new Date(d.getFullYear(), d.getMonth(), d.getDate());
-        }
+  <a
+    class="active"
+    href="https://drpboop.github.io/refill-lookback/"
+  >
+    refill lookback
+  </a>
 
-        function formatDateMMDDYYYY(d) {
-            const mm = String(d.getMonth() + 1).padStart(2, '0');
-            const dd = String(d.getDate()).padStart(2, '0');
-            const yyyy = d.getFullYear();
-            return `${mm}/${dd}/${yyyy}`;
-        }
+</nav>
 
-        // --- Prescription Lookback auto-calc ---
-        function autoCalculate() {
-            const table = document.getElementById("refillTable");
-            let total = 0;
-            let earliestDate = null;
+<div class="page-content">
 
-            for (let i = 1; i < table.rows.length; i++) {
-                const dateInput = table.rows[i].cells[0].children[0].value;
-                const supplyInput = table.rows[i].cells[1].children[0].value;
+<div class="container">
 
-                if (supplyInput) total += parseInt(supplyInput, 10);
+<h1>
+  prescription lookback & date difference calculator
+</h1>
 
-                if (dateInput) {
-                    const date = new Date(dateInput);
-                    if (!earliestDate || date < earliestDate) {
-                        earliestDate = date;
-                    }
-                }
-            }
+<h2>
+  prescription lookback
+</h2>
 
-            document.getElementById("totalSupplyResult").innerText = "total day supply: " + total;
+<table id="refillTable">
 
-            if (earliestDate && total > 0) {
-                // Normalize to local midnight and add total days.
-                const normalized = normalizeToLocalMidnight(earliestDate);
-                normalized.setDate(normalized.getDate() + total);
-                const projected = formatDateMMDDYYYY(normalized);
-                document.getElementById("projectedDateResult").innerText = "projected end date: " + projected;
-            } else {
-                document.getElementById("projectedDateResult").innerText = "projected end date: N/A";
-            }
-        }
+<tr>
+  <th>claim date</th>
+  <th>day supply</th>
+</tr>
 
-        // --- Date Difference (auto; days only; ABSOLUTE value) ---
-        function diffInCalendarDaysAbs(a, b) {
-            const d1 = normalizeToLocalMidnight(a);
-            const d2 = normalizeToLocalMidnight(b);
-            const ms = d2 - d1;
-            return Math.abs(Math.round(ms / (1000 * 60 * 60 * 24)));
-        }
+<tr>
+  <td>
+    <input
+      type="date"
+      onchange="autoCalculate()"
+    >
+  </td>
 
-        function autoCalcDateDiff() {
-            const startVal = document.getElementById('dateDiffStart').value;
-            const endVal = document.getElementById('dateDiffEnd').value;
-            const out = document.getElementById('dateDiffResult');
+  <td>
+    <input
+      type="number"
+      onchange="autoCalculate()"
+    >
+  </td>
+</tr>
 
-            if (!startVal || !endVal) {
-                out.textContent = 'day difference: N/A';
-                return;
-            }
+<tr>
+  <td>
+    <input
+      type="date"
+      onchange="autoCalculate()"
+    >
+  </td>
 
-            const a = new Date(startVal);
-            const b = new Date(endVal);
+  <td>
+    <input
+      type="number"
+      onchange="autoCalculate()"
+    >
+  </td>
+</tr>
 
-            if (Number.isNaN(a.getTime()) || Number.isNaN(b.getTime())) {
-                out.textContent = 'day difference: N/A';
-                return;
-            }
+<tr>
+  <td>
+    <input
+      type="date"
+      onchange="autoCalculate()"
+    >
+  </td>
 
-            const days = diffInCalendarDaysAbs(a, b); // absolute calendar days
-            out.textContent = `day difference: ${days} day(s)`;
-        }
+  <td>
+    <input
+      type="number"
+      onchange="autoCalculate()"
+    >
+  </td>
+</tr>
 
-        // Optional: if fields are prefilled (e.g., browser autofill), compute on load.
-        document.addEventListener('DOMContentLoaded', () => {
-            autoCalculate();
-            autoCalcDateDiff();
-        });
-    </script>
+<tr>
+  <td>
+    <input
+      type="date"
+      onchange="autoCalculate()"
+    >
+  </td>
+
+  <td>
+    <input
+      type="number"
+      onchange="autoCalculate()"
+    >
+  </td>
+</tr>
+
+<tr>
+  <td>
+    <input
+      type="date"
+      onchange="autoCalculate()"
+    >
+  </td>
+
+  <td>
+    <input
+      type="number"
+      onchange="autoCalculate()"
+    >
+  </td>
+</tr>
+
+<tr>
+  <td>
+    <input
+      type="date"
+      onchange="autoCalculate()"
+    >
+  </td>
+
+  <td>
+    <input
+      type="number"
+      onchange="autoCalculate()"
+    >
+  </td>
+</tr>
+
+<tr>
+  <td>
+    <input
+      type="date"
+      onchange="autoCalculate()"
+    >
+  </td>
+
+  <td>
+    <input
+      type="number"
+      onchange="autoCalculate()"
+    >
+  </td>
+</tr>
+
+<tr>
+  <td>
+    <input
+      type="date"
+      onchange="autoCalculate()"
+    >
+  </td>
+
+  <td>
+    <input
+      type="number"
+      onchange="autoCalculate()"
+    >
+  </td>
+</tr>
+
+<tr>
+  <td>
+    <input
+      type="date"
+      onchange="autoCalculate()"
+    >
+  </td>
+
+  <td>
+    <input
+      type="number"
+      onchange="autoCalculate()"
+    >
+  </td>
+</tr>
+
+<tr>
+  <td>
+    <input
+      type="date"
+      onchange="autoCalculate()"
+    >
+  </td>
+
+  <td>
+    <input
+      type="number"
+      onchange="autoCalculate()"
+    >
+  </td>
+</tr>
+
+</table>
+
+<div
+  class="result"
+  id="totalSupplyResult"
+>
+  total day supply: 0
+</div>
+
+<div
+  class="result"
+  id="projectedDateResult"
+>
+  projected end date: N/A
+</div>
+
+<div class="section">
+
+<h2>
+  date difference
+</h2>
+
+<div class="grid">
+
+  <div>
+
+    <label for="dateDiffStart">
+      start date
+    </label>
+
+    <input
+      type="date"
+      id="dateDiffStart"
+      onchange="autoCalcDateDiff()"
+    >
+
+  </div>
+
+  <div>
+
+    <label for="dateDiffEnd">
+      end date
+    </label>
+
+    <input
+      type="date"
+      id="dateDiffEnd"
+      onchange="autoCalcDateDiff()"
+    >
+
+  </div>
+
+</div>
+
+<div class="muted">
+  calculated automatically.
+</div>
+
+<div
+  class="result"
+  id="dateDiffResult"
+>
+  day difference: N/A
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+function parseLocalDate(value) {
+  const parts =
+    value.split("-");
+
+  const year =
+    Number(parts[0]);
+
+  const month =
+    Number(parts[1]) - 1;
+
+  const day =
+    Number(parts[2]);
+
+  return new Date(
+    year,
+    month,
+    day
+  );
+}
+
+function formatDateMMDDYYYY(date) {
+  const month =
+    String(
+      date.getMonth() + 1
+    ).padStart(2, "0");
+
+  const day =
+    String(
+      date.getDate()
+    ).padStart(2, "0");
+
+  const year =
+    date.getFullYear();
+
+  return (
+    month +
+    "/" +
+    day +
+    "/" +
+    year
+  );
+}
+
+function autoCalculate() {
+  const table =
+    document.getElementById(
+      "refillTable"
+    );
+
+  let total = 0;
+  let earliestDate = null;
+
+  for (
+    let rowNumber = 1;
+    rowNumber < table.rows.length;
+    rowNumber++
+  ) {
+    const dateValue =
+      table
+        .rows[rowNumber]
+        .cells[0]
+        .children[0]
+        .value;
+
+    const supplyValue =
+      table
+        .rows[rowNumber]
+        .cells[1]
+        .children[0]
+        .value;
+
+    const supply =
+      Number(supplyValue) || 0;
+
+    total += supply;
+
+    if (dateValue) {
+      const date =
+        parseLocalDate(dateValue);
+
+      if (
+        !earliestDate ||
+        date < earliestDate
+      ) {
+        earliestDate = date;
+      }
+    }
+  }
+
+  document
+    .getElementById(
+      "totalSupplyResult"
+    )
+    .textContent =
+      "total day supply: " +
+      total;
+
+  if (
+    earliestDate &&
+    total > 0
+  ) {
+    const projectedDate =
+      new Date(
+        earliestDate.getFullYear(),
+        earliestDate.getMonth(),
+        earliestDate.getDate()
+      );
+
+    projectedDate.setDate(
+      projectedDate.getDate() +
+      total
+    );
+
+    document
+      .getElementById(
+        "projectedDateResult"
+      )
+      .textContent =
+        "projected end date: " +
+        formatDateMMDDYYYY(
+          projectedDate
+        );
+  } else {
+    document
+      .getElementById(
+        "projectedDateResult"
+      )
+      .textContent =
+        "projected end date: N/A";
+  }
+}
+
+function autoCalcDateDiff() {
+  const startValue =
+    document
+      .getElementById(
+        "dateDiffStart"
+      )
+      .value;
+
+  const endValue =
+    document
+      .getElementById(
+        "dateDiffEnd"
+      )
+      .value;
+
+  const output =
+    document.getElementById(
+      "dateDiffResult"
+    );
+
+  if (
+    !startValue ||
+    !endValue
+  ) {
+    output.textContent =
+      "day difference: N/A";
+
+    return;
+  }
+
+  const startDate =
+    parseLocalDate(startValue);
+
+  const endDate =
+    parseLocalDate(endValue);
+
+  const milliseconds =
+    endDate.getTime() -
+    startDate.getTime();
+
+  const days =
+    Math.abs(
+      Math.round(
+        milliseconds /
+        86400000
+      )
+    );
+
+  output.textContent =
+    `day difference: ${days} day(s)`;
+}
+
+document.addEventListener(
+  "DOMContentLoaded",
+  function () {
+    autoCalculate();
+    autoCalcDateDiff();
+  }
+);
+
+</script>
+
 </body>
 </html>
