@@ -19,7 +19,10 @@
 
     body {
       margin: 0;
-      font-family: "Century Gothic", Arial, sans-serif;
+      font-family:
+        "Century Gothic",
+        Arial,
+        sans-serif;
       background: #f0f4f8;
       color: #2c3e50;
     }
@@ -53,9 +56,10 @@
     .container {
       max-width: 700px;
       margin: auto;
-      background: white;
       padding: 30px;
+      background: white;
       border-radius: 12px;
+
       box-shadow:
         0 4px 12px
         rgba(0, 0, 0, 0.1);
@@ -63,8 +67,8 @@
 
     h1,
     h2 {
-      text-align: center;
       color: #2c3e50;
+      text-align: center;
     }
 
     h1 {
@@ -79,14 +83,14 @@
 
     table {
       width: 100%;
-      border-collapse: collapse;
       margin-bottom: 20px;
+      border-collapse: collapse;
     }
 
     th,
     td {
-      border: 1px solid #dfe6e9;
       padding: 10px;
+      border: 1px solid #dfe6e9;
       text-align: center;
     }
 
@@ -106,10 +110,10 @@
 
     .result {
       margin-top: 10px;
-      text-align: center;
       color: #0984e3;
-      font-weight: bold;
+      text-align: center;
       font-size: 1.05rem;
+      font-weight: bold;
     }
 
     .section {
@@ -120,7 +124,8 @@
 
     .date-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns:
+        1fr 1fr;
       gap: 12px;
       align-items: end;
       margin-top: 16px;
@@ -130,8 +135,8 @@
       display: block;
       margin-bottom: 6px;
       color: #2c3e50;
-      font-weight: 600;
       text-align: left;
+      font-weight: 600;
     }
 
     .muted {
@@ -188,6 +193,10 @@
       href="https://drpboop.github.io/refill-lookback/"
     >
       refill lookback
+    </a>
+
+    <a href="https://drpboop.github.io/situational/">
+      situational
     </a>
 
   </nav>
@@ -410,7 +419,7 @@
         id="projectedDateResult"
         class="result"
       >
-        projected end date: N/A
+        projected end date: n/a
       </div>
 
       <section class="section">
@@ -459,7 +468,7 @@
           id="dateDiffResult"
           class="result"
         >
-          day difference: N/A
+          day difference: n/a
         </div>
 
       </section>
@@ -469,10 +478,13 @@
   </div>
 
   <script>
-    function parseLocalDate(value) {
-      const parts = value
-        .split("-")
-        .map(Number);
+    function parseLocalDate(
+      value
+    ) {
+      const parts =
+        value
+          .split("-")
+          .map(Number);
 
       return new Date(
         parts[0],
@@ -482,13 +494,15 @@
     }
 
     function formatDate(date) {
-      const month = String(
-        date.getMonth() + 1
-      ).padStart(2, "0");
+      const month =
+        String(
+          date.getMonth() + 1
+        ).padStart(2, "0");
 
-      const day = String(
-        date.getDate()
-      ).padStart(2, "0");
+      const day =
+        String(
+          date.getDate()
+        ).padStart(2, "0");
 
       const year =
         date.getFullYear();
@@ -503,49 +517,50 @@
     }
 
     function autoCalculate() {
-      const table =
-        document.getElementById(
-          "refillTable"
-        );
-
       const rows =
-        table.querySelectorAll(
-          "tbody tr"
+        document.querySelectorAll(
+          "#refillTable tbody tr"
         );
 
       let totalSupply = 0;
       let earliestDate = null;
 
-      rows.forEach(function (row) {
-        const dateInput =
-          row.querySelector(
-            'input[type="date"]'
-          );
-
-        const supplyInput =
-          row.querySelector(
-            'input[type="number"]'
-          );
-
-        const supply =
-          Number(supplyInput.value) || 0;
-
-        totalSupply += supply;
-
-        if (dateInput.value) {
-          const claimDate =
-            parseLocalDate(
-              dateInput.value
+      rows.forEach(
+        function (row) {
+          const dateInput =
+            row.querySelector(
+              'input[type="date"]'
             );
 
-          if (
-            earliestDate === null ||
-            claimDate < earliestDate
-          ) {
-            earliestDate = claimDate;
+          const supplyInput =
+            row.querySelector(
+              'input[type="number"]'
+            );
+
+          const supply =
+            Number(
+              supplyInput.value
+            ) || 0;
+
+          totalSupply += supply;
+
+          if (dateInput.value) {
+            const claimDate =
+              parseLocalDate(
+                dateInput.value
+              );
+
+            if (
+              earliestDate === null ||
+              claimDate <
+                earliestDate
+            ) {
+              earliestDate =
+                claimDate;
+            }
           }
         }
-      });
+      );
 
       document
         .getElementById(
@@ -561,9 +576,12 @@
       ) {
         const projectedDate =
           new Date(
-            earliestDate.getFullYear(),
-            earliestDate.getMonth(),
-            earliestDate.getDate()
+            earliestDate
+              .getFullYear(),
+            earliestDate
+              .getMonth(),
+            earliestDate
+              .getDate()
           );
 
         projectedDate.setDate(
@@ -577,14 +595,16 @@
           )
           .textContent =
             "projected end date: " +
-            formatDate(projectedDate);
+            formatDate(
+              projectedDate
+            );
       } else {
         document
           .getElementById(
             "projectedDateResult"
           )
           .textContent =
-            "projected end date: N/A";
+            "projected end date: n/a";
       }
     }
 
@@ -613,19 +633,20 @@
         !endValue
       ) {
         result.textContent =
-          "day difference: N/A";
+          "day difference: n/a";
 
         return;
       }
 
       const startDate =
-        parseLocalDate(startValue);
+        parseLocalDate(
+          startValue
+        );
 
       const endDate =
-        parseLocalDate(endValue);
-
-      const millisecondsPerDay =
-        1000 * 60 * 60 * 24;
+        parseLocalDate(
+          endValue
+        );
 
       const difference =
         Math.abs(
@@ -634,7 +655,12 @@
               endDate.getTime() -
               startDate.getTime()
             ) /
-            millisecondsPerDay
+            (
+              1000 *
+              60 *
+              60 *
+              24
+            )
           )
         );
 
