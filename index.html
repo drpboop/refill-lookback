@@ -1,683 +1,207 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>prescription lookback & date difference calculator</title>
+<style>
 
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
+:root{
+  --bg:#050505;
+  --panel:#111111;
+  --panel-2:#181818;
+  --border:#3b3218;
+  --white:#ffffff;
+  --yellow:#ffd84d;
+  --mustard:#c99a24;
+  --mustard-dark:#8f6814;
+  --muted:#cfcfcf;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  min-height:100vh;
+  font-family:"Century Gothic",Arial,sans-serif;
+  background:var(--bg);
+  color:var(--white);
+}
+.site-nav{
+  background:#0d0d0d;
+  padding:10px 16px;
+  display:flex;
+  justify-content:center;
+  flex-wrap:wrap;
+  gap:6px;
+  border-bottom:1px solid var(--border);
+}
+.site-nav a{
+  color:var(--white);
+  text-decoration:none;
+  padding:7px 10px;
+  border-radius:6px;
+  font-size:.9rem;
+}
+.site-nav a:hover{background:#2a2414;color:var(--yellow)}
+.site-nav a.active{background:var(--mustard-dark);color:var(--white)}
 
-  <title>
-    prescription lookback & date difference calculator
-  </title>
-
-  <style>
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      font-family:
-        "Century Gothic",
-        Arial,
-        sans-serif;
-      background: #f0f4f8;
-      color: #2c3e50;
-    }
-
-    .site-nav {
-      background: #111;
-      padding: 10px 16px;
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 6px;
-    }
-
-    .site-nav a {
-      color: white;
-      text-decoration: none;
-      padding: 7px 10px;
-      border-radius: 6px;
-      font-size: 0.9rem;
-    }
-
-    .site-nav a:hover,
-    .site-nav a.active {
-      background: #444;
-    }
-
-    .page-content {
-      padding: 20px;
-    }
-
-    .container {
-      max-width: 700px;
-      margin: auto;
-      padding: 30px;
-      background: white;
-      border-radius: 12px;
-
-      box-shadow:
-        0 4px 12px
-        rgba(0, 0, 0, 0.1);
-    }
-
-    h1,
-    h2 {
-      color: #2c3e50;
-      text-align: center;
-    }
-
-    h1 {
-      margin-top: 0;
-      font-size: 1.7rem;
-    }
-
-    h2 {
-      margin-top: 22px;
-      font-size: 1.25rem;
-    }
-
-    table {
-      width: 100%;
-      margin-bottom: 20px;
-      border-collapse: collapse;
-    }
-
-    th,
-    td {
-      padding: 10px;
-      border: 1px solid #dfe6e9;
-      text-align: center;
-    }
-
-    th {
-      background: #dfe6e9;
-      color: #2d3436;
-    }
-
-    input[type="date"],
-    input[type="number"] {
-      width: 92%;
-      padding: 8px;
-      border: 1px solid #b2bec3;
-      border-radius: 6px;
-      font-family: inherit;
-    }
-
-    .result {
-      margin-top: 10px;
-      color: #0984e3;
-      text-align: center;
-      font-size: 1.05rem;
-      font-weight: bold;
-    }
-
-    .section {
-      margin-top: 25px;
-      padding-top: 18px;
-      border-top: 1px solid #ecf0f1;
-    }
-
-    .date-grid {
-      display: grid;
-      grid-template-columns:
-        1fr 1fr;
-      gap: 12px;
-      align-items: end;
-      margin-top: 16px;
-    }
-
-    .date-grid label {
-      display: block;
-      margin-bottom: 6px;
-      color: #2c3e50;
-      text-align: left;
-      font-weight: 600;
-    }
-
-    .muted {
-      margin-top: 7px;
-      color: #636e72;
-      text-align: center;
-      font-size: 0.9rem;
-    }
-
-    @media (max-width: 550px) {
-      .page-content {
-        padding: 12px;
-      }
-
-      .container {
-        padding: 18px;
-      }
-
-      h1 {
-        font-size: 1.4rem;
-      }
-
-      .date-grid {
-        grid-template-columns: 1fr;
-      }
-
-      th,
-      td {
-        padding: 6px;
-      }
-
-      input[type="date"],
-      input[type="number"] {
-        width: 100%;
-      }
-    }
-  </style>
+.page-content{padding:20px}
+.container{
+  max-width:700px;margin:auto;background:var(--panel);padding:30px;
+  border:1px solid var(--border);border-radius:12px
+}
+h1{margin-top:0;color:var(--mustard);text-align:center;font-size:1.7rem}
+h2{margin-top:22px;color:var(--yellow);text-align:center;font-size:1.25rem}
+table{width:100%;border-collapse:collapse;margin-bottom:20px}
+th,td{border:1px solid #49401f;padding:10px;text-align:center}
+th{background:#211c0d;color:var(--yellow)}
+td{background:var(--panel-2)}
+input{
+  width:92%;padding:8px;border:1px solid #655522;border-radius:6px;
+  background:#222;color:var(--white);font-family:inherit
+}
+.result{margin-top:10px;text-align:center;color:var(--mustard);font-weight:bold;font-size:1.05rem}
+.section{margin-top:25px;padding-top:18px;border-top:1px solid var(--border)}
+.date-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:end;margin-top:16px}
+.date-grid label{display:block;margin-bottom:6px;color:var(--yellow);font-weight:600;text-align:left}
+.muted{margin-top:7px;color:var(--white);text-align:center;font-size:.9rem}
+.buttons{text-align:center;margin-top:18px}
+button{
+  padding:8px 14px;margin:5px;border:none;border-radius:6px;
+  background:var(--mustard-dark);color:var(--white);cursor:pointer;font-family:inherit
+}
+button:hover{background:var(--mustard)}
+@media(max-width:550px){
+  .page-content{padding:12px}.container{padding:18px}h1{font-size:1.4rem}
+  .date-grid{grid-template-columns:1fr}th,td{padding:6px}input{width:100%}
+}
+</style>
 </head>
-
 <body>
+<nav class="site-nav">
+<a href="https://drpboop.github.io/home/">home</a>
+<a href="https://drpboop.github.io/crit/">critter</a>
+<a class="active" href="https://drpboop.github.io/refill-lookback/">refill lookback</a>
+<a href="https://drpboop.github.io/situational/">situational</a>
+</nav>
 
-  <nav class="site-nav">
+<div class="page-content">
+<div class="container">
+<h1>prescription lookback & date difference calculator</h1>
+<h2>prescription lookback</h2>
 
-    <a href="https://drpboop.github.io/home/">
-      home
-    </a>
+<table id="refillTable">
+<thead><tr><th>claim date</th><th>day supply</th></tr></thead>
+<tbody><tr><td><input class="persist" type="date"></td><td><input class="persist" type="number" min="0"></td></tr>
+<tr><td><input class="persist" type="date"></td><td><input class="persist" type="number" min="0"></td></tr>
+<tr><td><input class="persist" type="date"></td><td><input class="persist" type="number" min="0"></td></tr>
+<tr><td><input class="persist" type="date"></td><td><input class="persist" type="number" min="0"></td></tr>
+<tr><td><input class="persist" type="date"></td><td><input class="persist" type="number" min="0"></td></tr>
+<tr><td><input class="persist" type="date"></td><td><input class="persist" type="number" min="0"></td></tr>
+<tr><td><input class="persist" type="date"></td><td><input class="persist" type="number" min="0"></td></tr>
+<tr><td><input class="persist" type="date"></td><td><input class="persist" type="number" min="0"></td></tr>
+<tr><td><input class="persist" type="date"></td><td><input class="persist" type="number" min="0"></td></tr>
+<tr><td><input class="persist" type="date"></td><td><input class="persist" type="number" min="0"></td></tr></tbody>
+</table>
 
-    <a href="https://drpboop.github.io/crit/">
-      critter
-    </a>
+<div id="totalSupplyResult" class="result">total day supply: 0</div>
+<div id="projectedDateResult" class="result">projected end date: n/a</div>
 
-    <a
-      class="active"
-      href="https://drpboop.github.io/refill-lookback/"
-    >
-      refill lookback
-    </a>
+<section class="section">
+<h2>date difference</h2>
+<div class="date-grid">
+<div>
+<label for="dateDiffStart">start date</label>
+<input class="persist" type="date" id="dateDiffStart">
+</div>
+<div>
+<label for="dateDiffEnd">end date</label>
+<input class="persist" type="date" id="dateDiffEnd">
+</div>
+</div>
+<div class="muted">calculated automatically</div>
+<div id="dateDiffResult" class="result">day difference: n/a</div>
+</section>
 
-    <a href="https://drpboop.github.io/situational/">
-      situational
-    </a>
+<div class="buttons">
+<button onclick="resetPage()">reset</button>
+</div>
+</div>
+</div>
 
-  </nav>
+<script>
+const storageKey="refillLookbackState";
 
-  <div class="page-content">
+function parseLocalDate(value){
+  const parts=value.split("-").map(Number);
+  return new Date(parts[0],parts[1]-1,parts[2]);
+}
+function formatDate(date){
+  return String(date.getMonth()+1).padStart(2,"0")+"/"+
+         String(date.getDate()).padStart(2,"0")+"/"+
+         date.getFullYear();
+}
+function calculate(){
+  const rows=document.querySelectorAll("#refillTable tbody tr");
+  let total=0;
+  let earliest=null;
 
-    <div class="container">
-
-      <h1>
-        prescription lookback & date difference calculator
-      </h1>
-
-      <h2>
-        prescription lookback
-      </h2>
-
-      <table id="refillTable">
-
-        <thead>
-          <tr>
-            <th>claim date</th>
-            <th>day supply</th>
-          </tr>
-        </thead>
-
-        <tbody>
-
-          <tr>
-            <td>
-              <input
-                type="date"
-                onchange="autoCalculate()"
-              >
-            </td>
-
-            <td>
-              <input
-                type="number"
-                min="0"
-                onchange="autoCalculate()"
-                oninput="autoCalculate()"
-              >
-            </td>
-          </tr>
-
-          <tr>
-            <td>
-              <input
-                type="date"
-                onchange="autoCalculate()"
-              >
-            </td>
-
-            <td>
-              <input
-                type="number"
-                min="0"
-                onchange="autoCalculate()"
-                oninput="autoCalculate()"
-              >
-            </td>
-          </tr>
-
-          <tr>
-            <td>
-              <input
-                type="date"
-                onchange="autoCalculate()"
-              >
-            </td>
-
-            <td>
-              <input
-                type="number"
-                min="0"
-                onchange="autoCalculate()"
-                oninput="autoCalculate()"
-              >
-            </td>
-          </tr>
-
-          <tr>
-            <td>
-              <input
-                type="date"
-                onchange="autoCalculate()"
-              >
-            </td>
-
-            <td>
-              <input
-                type="number"
-                min="0"
-                onchange="autoCalculate()"
-                oninput="autoCalculate()"
-              >
-            </td>
-          </tr>
-
-          <tr>
-            <td>
-              <input
-                type="date"
-                onchange="autoCalculate()"
-              >
-            </td>
-
-            <td>
-              <input
-                type="number"
-                min="0"
-                onchange="autoCalculate()"
-                oninput="autoCalculate()"
-              >
-            </td>
-          </tr>
-
-          <tr>
-            <td>
-              <input
-                type="date"
-                onchange="autoCalculate()"
-              >
-            </td>
-
-            <td>
-              <input
-                type="number"
-                min="0"
-                onchange="autoCalculate()"
-                oninput="autoCalculate()"
-              >
-            </td>
-          </tr>
-
-          <tr>
-            <td>
-              <input
-                type="date"
-                onchange="autoCalculate()"
-              >
-            </td>
-
-            <td>
-              <input
-                type="number"
-                min="0"
-                onchange="autoCalculate()"
-                oninput="autoCalculate()"
-              >
-            </td>
-          </tr>
-
-          <tr>
-            <td>
-              <input
-                type="date"
-                onchange="autoCalculate()"
-              >
-            </td>
-
-            <td>
-              <input
-                type="number"
-                min="0"
-                onchange="autoCalculate()"
-                oninput="autoCalculate()"
-              >
-            </td>
-          </tr>
-
-          <tr>
-            <td>
-              <input
-                type="date"
-                onchange="autoCalculate()"
-              >
-            </td>
-
-            <td>
-              <input
-                type="number"
-                min="0"
-                onchange="autoCalculate()"
-                oninput="autoCalculate()"
-              >
-            </td>
-          </tr>
-
-          <tr>
-            <td>
-              <input
-                type="date"
-                onchange="autoCalculate()"
-              >
-            </td>
-
-            <td>
-              <input
-                type="number"
-                min="0"
-                onchange="autoCalculate()"
-                oninput="autoCalculate()"
-              >
-            </td>
-          </tr>
-
-        </tbody>
-
-      </table>
-
-      <div
-        id="totalSupplyResult"
-        class="result"
-      >
-        total day supply: 0
-      </div>
-
-      <div
-        id="projectedDateResult"
-        class="result"
-      >
-        projected end date: n/a
-      </div>
-
-      <section class="section">
-
-        <h2>
-          date difference
-        </h2>
-
-        <div class="date-grid">
-
-          <div>
-
-            <label for="dateDiffStart">
-              start date
-            </label>
-
-            <input
-              type="date"
-              id="dateDiffStart"
-              onchange="autoCalcDateDiff()"
-            >
-
-          </div>
-
-          <div>
-
-            <label for="dateDiffEnd">
-              end date
-            </label>
-
-            <input
-              type="date"
-              id="dateDiffEnd"
-              onchange="autoCalcDateDiff()"
-            >
-
-          </div>
-
-        </div>
-
-        <div class="muted">
-          calculated automatically
-        </div>
-
-        <div
-          id="dateDiffResult"
-          class="result"
-        >
-          day difference: n/a
-        </div>
-
-      </section>
-
-    </div>
-
-  </div>
-
-  <script>
-    function parseLocalDate(
-      value
-    ) {
-      const parts =
-        value
-          .split("-")
-          .map(Number);
-
-      return new Date(
-        parts[0],
-        parts[1] - 1,
-        parts[2]
-      );
+  rows.forEach(row=>{
+    const dateValue=row.querySelector('input[type="date"]').value;
+    const supply=Number(row.querySelector('input[type="number"]').value)||0;
+    total+=supply;
+    if(dateValue){
+      const date=parseLocalDate(dateValue);
+      if(!earliest||date<earliest)earliest=date;
     }
+  });
 
-    function formatDate(date) {
-      const month =
-        String(
-          date.getMonth() + 1
-        ).padStart(2, "0");
+  document.getElementById("totalSupplyResult").textContent="total day supply: "+total;
 
-      const day =
-        String(
-          date.getDate()
-        ).padStart(2, "0");
+  if(earliest&&total>0){
+    const projected=new Date(earliest.getFullYear(),earliest.getMonth(),earliest.getDate());
+    projected.setDate(projected.getDate()+total);
+    document.getElementById("projectedDateResult").textContent="projected end date: "+formatDate(projected);
+  }else{
+    document.getElementById("projectedDateResult").textContent="projected end date: n/a";
+  }
 
-      const year =
-        date.getFullYear();
+  const start=document.getElementById("dateDiffStart").value;
+  const end=document.getElementById("dateDiffEnd").value;
+  if(start&&end){
+    const days=Math.abs(Math.round((parseLocalDate(end)-parseLocalDate(start))/86400000));
+    document.getElementById("dateDiffResult").textContent="day difference: "+days+" day(s)";
+  }else{
+    document.getElementById("dateDiffResult").textContent="day difference: n/a";
+  }
+}
 
-      return (
-        month +
-        "/" +
-        day +
-        "/" +
-        year
-      );
-    }
+function saveState(){
+  const values=[...document.querySelectorAll(".persist")].map(el=>el.value);
+  localStorage.setItem(storageKey,JSON.stringify(values));
+}
 
-    function autoCalculate() {
-      const rows =
-        document.querySelectorAll(
-          "#refillTable tbody tr"
-        );
+function restoreState(){
+  const saved=JSON.parse(localStorage.getItem(storageKey)||"null");
+  if(!saved)return;
+  [...document.querySelectorAll(".persist")].forEach((el,index)=>{
+    if(saved[index]!==undefined)el.value=saved[index];
+  });
+}
 
-      let totalSupply = 0;
-      let earliestDate = null;
+function resetPage(){
+  document.querySelectorAll(".persist").forEach(el=>el.value="");
+  localStorage.removeItem(storageKey);
+  calculate();
+}
 
-      rows.forEach(
-        function (row) {
-          const dateInput =
-            row.querySelector(
-              'input[type="date"]'
-            );
-
-          const supplyInput =
-            row.querySelector(
-              'input[type="number"]'
-            );
-
-          const supply =
-            Number(
-              supplyInput.value
-            ) || 0;
-
-          totalSupply += supply;
-
-          if (dateInput.value) {
-            const claimDate =
-              parseLocalDate(
-                dateInput.value
-              );
-
-            if (
-              earliestDate === null ||
-              claimDate <
-                earliestDate
-            ) {
-              earliestDate =
-                claimDate;
-            }
-          }
-        }
-      );
-
-      document
-        .getElementById(
-          "totalSupplyResult"
-        )
-        .textContent =
-          "total day supply: " +
-          totalSupply;
-
-      if (
-        earliestDate !== null &&
-        totalSupply > 0
-      ) {
-        const projectedDate =
-          new Date(
-            earliestDate
-              .getFullYear(),
-            earliestDate
-              .getMonth(),
-            earliestDate
-              .getDate()
-          );
-
-        projectedDate.setDate(
-          projectedDate.getDate() +
-          totalSupply
-        );
-
-        document
-          .getElementById(
-            "projectedDateResult"
-          )
-          .textContent =
-            "projected end date: " +
-            formatDate(
-              projectedDate
-            );
-      } else {
-        document
-          .getElementById(
-            "projectedDateResult"
-          )
-          .textContent =
-            "projected end date: n/a";
-      }
-    }
-
-    function autoCalcDateDiff() {
-      const startValue =
-        document
-          .getElementById(
-            "dateDiffStart"
-          )
-          .value;
-
-      const endValue =
-        document
-          .getElementById(
-            "dateDiffEnd"
-          )
-          .value;
-
-      const result =
-        document.getElementById(
-          "dateDiffResult"
-        );
-
-      if (
-        !startValue ||
-        !endValue
-      ) {
-        result.textContent =
-          "day difference: n/a";
-
-        return;
-      }
-
-      const startDate =
-        parseLocalDate(
-          startValue
-        );
-
-      const endDate =
-        parseLocalDate(
-          endValue
-        );
-
-      const difference =
-        Math.abs(
-          Math.round(
-            (
-              endDate.getTime() -
-              startDate.getTime()
-            ) /
-            (
-              1000 *
-              60 *
-              60 *
-              24
-            )
-          )
-        );
-
-      result.textContent =
-        "day difference: " +
-        difference +
-        " day(s)";
-    }
-
-    document.addEventListener(
-      "DOMContentLoaded",
-      function () {
-        autoCalculate();
-        autoCalcDateDiff();
-      }
-    );
-  </script>
-
+document.addEventListener("DOMContentLoaded",function(){
+  restoreState();
+  calculate();
+  document.querySelectorAll(".persist").forEach(el=>{
+    el.addEventListener("input",function(){saveState();calculate();});
+    el.addEventListener("change",function(){saveState();calculate();});
+  });
+});
+</script>
 </body>
 </html>
