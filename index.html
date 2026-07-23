@@ -2,96 +2,187 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>prescription lookback & date difference calculator</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>refill lookback</title>
 <style>
-
 :root{
-  --bg:#050505;
+  --black:#050505;
   --panel:#111111;
-  --panel-2:#181818;
-  --border:#3b3218;
+  --panel2:#181818;
   --white:#ffffff;
   --yellow:#ffd84d;
   --mustard:#c99a24;
-  --mustard-dark:#8f6814;
+  --mustardDark:#8f6814;
+  --border:#4b3a16;
   --muted:#cfcfcf;
+  --danger:#7a1f1f;
 }
 *{box-sizing:border-box}
 body{
   margin:0;
   min-height:100vh;
-  font-family:"Century Gothic",Arial,sans-serif;
-  background:var(--bg);
+  background:var(--black);
   color:var(--white);
+  font-family:"Century Gothic",Arial,sans-serif;
 }
 .site-nav{
-  background:#0d0d0d;
-  padding:10px 16px;
   display:flex;
   justify-content:center;
   flex-wrap:wrap;
   gap:6px;
+  padding:10px 16px;
+  background:#0d0d0d;
   border-bottom:1px solid var(--border);
 }
 .site-nav a{
-  color:var(--white);
-  text-decoration:none;
   padding:7px 10px;
   border-radius:6px;
+  color:var(--white);
+  text-decoration:none;
   font-size:.9rem;
 }
-.site-nav a:hover{background:#2a2414;color:var(--yellow)}
-.site-nav a.active{background:var(--mustard-dark);color:var(--white)}
-
-.page-content{padding:20px}
+.site-nav a:hover{
+  background:#2a2414;
+  color:var(--yellow);
+}
+.site-nav a.active{
+  background:var(--mustardDark);
+  color:var(--white);
+}
+.page{padding:20px}
 .container{
-  max-width:700px;margin:auto;background:var(--panel);padding:30px;
-  border:1px solid var(--border);border-radius:12px
+  max-width:720px;
+  margin:auto;
+  background:var(--panel);
+  padding:28px;
+  border:1px solid var(--border);
+  border-radius:12px;
+  box-shadow:0 4px 12px rgba(0,0,0,.5);
 }
-h1{margin-top:0;color:var(--mustard);text-align:center;font-size:1.7rem}
-h2{margin-top:22px;color:var(--yellow);text-align:center;font-size:1.25rem}
-table{width:100%;border-collapse:collapse;margin-bottom:20px}
-th,td{border:1px solid #49401f;padding:10px;text-align:center}
-th{background:#211c0d;color:var(--yellow)}
-td{background:var(--panel-2)}
+h1{
+  margin-top:0;
+  color:var(--mustard);
+  text-align:center;
+  font-size:1.7rem;
+}
+h2{
+  margin-top:22px;
+  color:var(--yellow);
+  text-align:center;
+  font-size:1.25rem;
+}
+table{
+  width:100%;
+  border-collapse:collapse;
+  margin-bottom:20px;
+}
+th,
+td{
+  border:1px solid #49401f;
+  padding:10px;
+  text-align:center;
+}
+th{
+  background:#211c0d;
+  color:var(--yellow);
+}
+td{
+  background:var(--panel2);
+}
 input{
-  width:92%;padding:8px;border:1px solid #655522;border-radius:6px;
-  background:#222;color:var(--white);font-family:inherit
+  width:92%;
+  padding:8px;
+  border:1px solid #655522;
+  border-radius:6px;
+  background:#222;
+  color:var(--white);
+  font-family:inherit;
 }
-.result{margin-top:10px;text-align:center;color:var(--mustard);font-weight:bold;font-size:1.05rem}
-.section{margin-top:25px;padding-top:18px;border-top:1px solid var(--border)}
-.date-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:end;margin-top:16px}
-.date-grid label{display:block;margin-bottom:6px;color:var(--yellow);font-weight:600;text-align:left}
-.muted{margin-top:7px;color:var(--white);text-align:center;font-size:.9rem}
-.buttons{text-align:center;margin-top:18px}
+.result{
+  margin-top:10px;
+  text-align:center;
+  color:var(--mustard);
+  font-weight:bold;
+  font-size:1.05rem;
+}
+.section{
+  margin-top:25px;
+  padding-top:18px;
+  border-top:1px solid var(--border);
+}
+.date-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  align-items:end;
+  margin-top:16px;
+}
+.date-grid label{
+  display:block;
+  margin-bottom:6px;
+  color:var(--yellow);
+  font-weight:600;
+  text-align:left;
+}
+.muted{
+  margin-top:7px;
+  color:var(--white);
+  text-align:center;
+  font-size:.9rem;
+}
+.buttons{
+  text-align:center;
+  margin-top:18px;
+}
 button{
-  padding:8px 14px;margin:5px;border:none;border-radius:6px;
-  background:var(--mustard-dark);color:var(--white);cursor:pointer;font-family:inherit
+  padding:8px 14px;
+  margin:5px;
+  border:none;
+  border-radius:6px;
+  background:var(--mustardDark);
+  color:var(--white);
+  cursor:pointer;
+  font-family:inherit;
 }
-button:hover{background:var(--mustard)}
+button:hover{
+  background:var(--mustard);
+}
 @media(max-width:550px){
-  .page-content{padding:12px}.container{padding:18px}h1{font-size:1.4rem}
-  .date-grid{grid-template-columns:1fr}th,td{padding:6px}input{width:100%}
+  .page{padding:12px}
+  .container{padding:18px}
+  h1{font-size:1.4rem}
+  .date-grid{grid-template-columns:1fr}
+  th,td{padding:6px}
+  input{width:100%}
 }
 </style>
 </head>
+
 <body>
+
 <nav class="site-nav">
-<a href="https://drpboop.github.io/home/">home</a>
-<a href="https://drpboop.github.io/crit/">critter</a>
-<a class="active" href="https://drpboop.github.io/refill-lookback/">refill lookback</a>
-<a href="https://drpboop.github.io/situational/">situational</a>
+  <a href="https://drpboop.github.io/home/">home</a>
+  <a href="https://drpboop.github.io/crit/">critter</a>
+  <a class="active" href="https://drpboop.github.io/refill-lookback/">refill lookback</a>
+  <a href="https://drpboop.github.io/situational/">situational</a>
+  <a href="https://drpboop.github.io/status-log/">status log</a>
 </nav>
 
-<div class="page-content">
+<div class="page">
 <div class="container">
+
 <h1>prescription lookback & date difference calculator</h1>
+
 <h2>prescription lookback</h2>
 
 <table id="refillTable">
-<thead><tr><th>claim date</th><th>day supply</th></tr></thead>
-<tbody><tr><td><input class="persist" type="date"></td><td><input class="persist" type="number" min="0"></td></tr>
+<thead>
+<tr>
+<th>claim date</th>
+<th>day supply</th>
+</tr>
+</thead>
+<tbody>
 <tr><td><input class="persist" type="date"></td><td><input class="persist" type="number" min="0"></td></tr>
 <tr><td><input class="persist" type="date"></td><td><input class="persist" type="number" min="0"></td></tr>
 <tr><td><input class="persist" type="date"></td><td><input class="persist" type="number" min="0"></td></tr>
@@ -100,7 +191,9 @@ button:hover{background:var(--mustard)}
 <tr><td><input class="persist" type="date"></td><td><input class="persist" type="number" min="0"></td></tr>
 <tr><td><input class="persist" type="date"></td><td><input class="persist" type="number" min="0"></td></tr>
 <tr><td><input class="persist" type="date"></td><td><input class="persist" type="number" min="0"></td></tr>
-<tr><td><input class="persist" type="date"></td><td><input class="persist" type="number" min="0"></td></tr></tbody>
+<tr><td><input class="persist" type="date"></td><td><input class="persist" type="number" min="0"></td></tr>
+<tr><td><input class="persist" type="date"></td><td><input class="persist" type="number" min="0"></td></tr>
+</tbody>
 </table>
 
 <div id="totalSupplyResult" class="result">total day supply: 0</div>
@@ -108,16 +201,19 @@ button:hover{background:var(--mustard)}
 
 <section class="section">
 <h2>date difference</h2>
+
 <div class="date-grid">
 <div>
 <label for="dateDiffStart">start date</label>
 <input class="persist" type="date" id="dateDiffStart">
 </div>
+
 <div>
 <label for="dateDiffEnd">end date</label>
 <input class="persist" type="date" id="dateDiffEnd">
 </div>
 </div>
+
 <div class="muted">calculated automatically</div>
 <div id="dateDiffResult" class="result">day difference: n/a</div>
 </section>
@@ -125,6 +221,7 @@ button:hover{background:var(--mustard)}
 <div class="buttons">
 <button onclick="resetPage()">reset</button>
 </div>
+
 </div>
 </div>
 
@@ -135,20 +232,23 @@ function parseLocalDate(value){
   const parts=value.split("-").map(Number);
   return new Date(parts[0],parts[1]-1,parts[2]);
 }
+
 function formatDate(date){
   return String(date.getMonth()+1).padStart(2,"0")+"/"+
          String(date.getDate()).padStart(2,"0")+"/"+
          date.getFullYear();
 }
+
 function calculate(){
   const rows=document.querySelectorAll("#refillTable tbody tr");
   let total=0;
   let earliest=null;
 
-  rows.forEach(row=>{
+  rows.forEach(function(row){
     const dateValue=row.querySelector('input[type="date"]').value;
     const supply=Number(row.querySelector('input[type="number"]').value)||0;
     total+=supply;
+
     if(dateValue){
       const date=parseLocalDate(dateValue);
       if(!earliest||date<earliest)earliest=date;
@@ -167,6 +267,7 @@ function calculate(){
 
   const start=document.getElementById("dateDiffStart").value;
   const end=document.getElementById("dateDiffEnd").value;
+
   if(start&&end){
     const days=Math.abs(Math.round((parseLocalDate(end)-parseLocalDate(start))/86400000));
     document.getElementById("dateDiffResult").textContent="day difference: "+days+" day(s)";
@@ -176,20 +277,28 @@ function calculate(){
 }
 
 function saveState(){
-  const values=[...document.querySelectorAll(".persist")].map(el=>el.value);
+  const values=[...document.querySelectorAll(".persist")].map(function(el){
+    return el.value;
+  });
+
   localStorage.setItem(storageKey,JSON.stringify(values));
 }
 
 function restoreState(){
   const saved=JSON.parse(localStorage.getItem(storageKey)||"null");
+
   if(!saved)return;
-  [...document.querySelectorAll(".persist")].forEach((el,index)=>{
+
+  [...document.querySelectorAll(".persist")].forEach(function(el,index){
     if(saved[index]!==undefined)el.value=saved[index];
   });
 }
 
 function resetPage(){
-  document.querySelectorAll(".persist").forEach(el=>el.value="");
+  document.querySelectorAll(".persist").forEach(function(el){
+    el.value="";
+  });
+
   localStorage.removeItem(storageKey);
   calculate();
 }
@@ -197,11 +306,20 @@ function resetPage(){
 document.addEventListener("DOMContentLoaded",function(){
   restoreState();
   calculate();
-  document.querySelectorAll(".persist").forEach(el=>{
-    el.addEventListener("input",function(){saveState();calculate();});
-    el.addEventListener("change",function(){saveState();calculate();});
+
+  document.querySelectorAll(".persist").forEach(function(el){
+    el.addEventListener("input",function(){
+      saveState();
+      calculate();
+    });
+
+    el.addEventListener("change",function(){
+      saveState();
+      calculate();
+    });
   });
 });
 </script>
+
 </body>
 </html>
